@@ -6,6 +6,7 @@ Version 1.0 includes:
 3) Add new spending record
 
 ======== Plan ==========
+
 Version 2.0:
 1) Guest login page
 2) User priviledge/Delete record
