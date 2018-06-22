@@ -1,10 +1,5 @@
 <?php
  include("conf/conn_db1.php");
- session_start();
- if(!isset($_SESSION["username"]) || empty($_SESSION["username"])) {
-  header("Location: signin.php");
-  exit;
- }
 
 $totalErr = $paydateErr = "";
 $total_spend = $sql_paydate = "";
@@ -30,12 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
      if(mysqli_query($conn,$sql))
       { echo "New spending record is added.";
-        header("location:spendsum.php");
+        header("location: guestview.php");
       } else {
         echo "Failed to add." . mysqli_error($conn);
       }
   } 
-mysqli_close($conn);
 }
 
 ?>
@@ -100,8 +94,7 @@ mysqli_close($conn);
        <span class="label-input100">Who did it</span>
         <div>
          <select class="selection-2" name="who">
-          <option>Tank</option>
-	  <option>Jen</option>
+          <option>Guest Test</option>
          </select>
 	</div>
        <span class="focus-input100"></span>

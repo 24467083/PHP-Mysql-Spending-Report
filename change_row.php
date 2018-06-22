@@ -6,8 +6,13 @@
   exit;
  }
 
+$change_row_num=$_GET['id'];
 $totalErr = $paydateErr = "";
 $total_spend = $sql_paydate = "";
+
+$query_sql = "SELECT * FROM spending_tbl WHERE id=$change_row_num";
+$query_result = mysqli_query($conn,$query_sql);
+$target_row = mysqli_fetch_row($query_result);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
  {
@@ -25,17 +30,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   } else {
      $sql_paydate = date('Y-m-d',strtotime($_POST['pay_date']));
 
-     $sql = "INSERT INTO spending_tbl (type,total,who,pay_date,location,memo)
-            values ('$_POST[type]','$total_spend','$_POST[who]','$sql_paydate','$_POST[location]','$_POST[memo]')";
+     $update_sql = "UPDATE spending_tbl SET type='$_POST[type]',total='$total_spend',who='$_POST[who]',pay_date='$sql_paydate',location='$_POST[location]',memo='$_POST[memo]' WHERE `id`='$change_row_num'";
 
-     if(mysqli_query($conn,$sql))
-      { echo "New spending record is added.";
-        header("location:spendsum.php");
+     if(mysqli_query($conn,$update_sql))
+      { echo "Update complete.";
+        echo "<script>window.close();
+               window.opener.location.reload();</script>";
       } else {
-        echo "Failed to add." . mysqli_error($conn);
+        echo "Failed to update." . mysqli_error($conn);
       }
-  } 
-mysqli_close($conn);
+  }
+mysqli_close($conn); 
 }
 
 ?>
@@ -43,7 +48,7 @@ mysqli_close($conn);
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <title>Add Consumption</title>
+ <title>Update Consumption</title>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -72,13 +77,12 @@ mysqli_close($conn);
 <body>
  <div class="container-contact100">
   <div class="wrap-contact100">
-    <form class="contact100-form validate-form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-     <span class="contact100-form-title">New Consumption</span>
-      
+    <form class="contact100-form validate-form" method="post">
       <div class="wrap-input100 input100-select">
        <span class="label-input100">Cost Type</span>
         <div>
          <select class="selection-2" name="type">
+	  <option selected><?php echo $target_row[1]; ?></option>
 	  <option>House/Renter</option>
 	  <option>Food</option>
 	  <option>Restaurant</option>
@@ -92,7 +96,7 @@ mysqli_close($conn);
 
       <div class="wrap-input100">
        <span class="label-input100">Total Spent </span><span class="fieldError">* <?php echo $totalErr; ?></span>
-        <input class="input100" type="text" name="total" placeholder="How much did you spend" value="<?php if(isset($_POST['total'])){ echo $_POST['total'];} ?>">
+        <input class="input100" type="text" name="total" value="<?php echo $target_row[2]; ?>">
          <span class="focus-input100"></span>
       </div>
 
@@ -100,6 +104,7 @@ mysqli_close($conn);
        <span class="label-input100">Who did it</span>
         <div>
          <select class="selection-2" name="who">
+          <option selected><?php echo $target_row[3]; ?></option>
           <option>Tank</option>
 	  <option>Jen</option>
          </select>
@@ -109,7 +114,7 @@ mysqli_close($conn);
 
       <div class="wrap-input100 validate-input">
        <span class="label-input100">Spent on day </span><span class="fieldError">* <?php echo $paydateErr; ?></span>
-        <input class="input100" type="text" name="pay_date" id="datepicker" placeholder="Pickup a date">
+        <input class="input100" type="text" name="pay_date" id="datepicker" value="<?php echo $target_row[4]; ?>">
          <span class="focus-input100"></span>
       </div>
 
@@ -117,6 +122,7 @@ mysqli_close($conn);
        <span class="label-input100">Where did you spend</span>
         <div>
          <select class="selection-2" name="location">
+          <option selected><?php echo $target_row[5]; ?></option>
           <option>Austin</option>
           <option>Houston</option>
          </select>
@@ -126,7 +132,7 @@ mysqli_close($conn);
 
       <div class="wrap-input100 validate-input">
        <span class="label-input100">Memo/Notes</span>
-        <textarea class="input100" name="memo" placeholder="Put notes here..."></textarea>
+        <textarea class="input100" name="memo"><?php echo $target_row[6]; ?></textarea>
          <span class="focus-input100"></span>
       </div>
 
@@ -134,7 +140,7 @@ mysqli_close($conn);
        <div class="wrap-contact100-form-btn">
         <div class="contact100-form-bgbtn"></div>
          <button class="contact100-form-btn" type="submit" name="save">
-	  <span>Submit
+	  <span>Update
 	   <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
 	  </span>
 	 </button>

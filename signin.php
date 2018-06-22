@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
  if(empty($input_passw)){
-   $password_err = 'Please enter your password.';
+   $password_err = "Please enter your password.";
     } else{
         $password = $input_passw;
     }
@@ -35,10 +35,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                      $_SESSION["lastname"]  = $userlastname;
                      header("location: spendsum.php");
                   }
-                  else{ $password_err = 'The password was not valid.'; }
+                  else{ $password_err = "The password was not valid."; }
                 }
             }
-            else{ $username_err = 'Account not found.'; }
+            else{ $username_err = "Account not found."; }
          }
          else{ echo "Oops! Something went wrong. Please contact Tank."; }
      }
