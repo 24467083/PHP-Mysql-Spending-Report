@@ -38,10 +38,11 @@
     <table class="function-table">
      <tr>
       <td><div class="user-dropdown">
-        <button class="user-dropbtn"><?php echo "Hi, ".htmlspecialchars($_SESSION["firstname"]." ".$_SESSION["lastname"]); ?> <i class="fa fa-caret-right"></i></button>
+        <button id="current_user" class="user-dropbtn"><?php echo "Hi, ".htmlspecialchars($_SESSION["firstname"]." ".$_SESSION["lastname"]); ?> <i class="fa fa-caret-right"></i></button>
         <div class="user-dropdown-content"> 
         <a href="signout.php">Switch User</a>
-        <a href=#>Email Admin</a>
+        <!--<a href="../spendsum.php" onclick="Email_Admin((<?php echo $_SESSION['userid']; ?>),(<?php echo $_SESSION['firstname']; ?>))">Email Admin</a> -->
+        <a href="../spendsum.php" onclick="Email_Admin(<?php echo $_SESSION['userid']; ?>)">Email Admin</a>
       </div></div></td>
       <td><select class="searchSelect" id="ft_srch_sl">
           <option value="1">Type</option>
@@ -163,9 +164,14 @@ function update_search_ph() {
  aa.placeholder = "Search within "+yy;
 }
 
-</script>
+function Email_Admin(user_id) {
+ $.get("emailAdmin.php?userid="+user_id);
+ var currentU = document.getElementById("current_user");
+ alert(currentU.textContent+", you have triggered an email to admin with your contact information. He will contact you soon. Hope you enjoy this site.");
+}
 
-<!--===============================================================================================-->	
+</script>
+<!--=======External JS===========================================-->	
 <script src="css/vendor/jquery/jquery-3.2.1.min.js"></script>
 <script src="css/vendor/bootstrap/js/popper.js"></script>
 <script src="css/vendor/bootstrap/js/bootstrap.min.js"></script>

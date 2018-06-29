@@ -19,20 +19,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
   
  if(empty($username_err) && empty($password_err)){
-   $sql = "SELECT user_login,user_password,user_firstname,user_lastname FROM user_tbl WHERE user_login = ?";
+   $sql = "SELECT user_id,user_login,user_password,user_firstname,user_lastname FROM user_tbl WHERE user_login = ?";
      if($stmt = mysqli_prepare($conn, $sql)){
        mysqli_stmt_bind_param($stmt, "s", $param_username);
        $param_username = $username;
          if(mysqli_stmt_execute($stmt)){
            mysqli_stmt_store_result($stmt);
             if(mysqli_stmt_num_rows($stmt) == 1){                    
-              mysqli_stmt_bind_result($stmt,$username,$hashed_password,$userfirstname,$userlastname);
+              mysqli_stmt_bind_result($stmt,$userid,$username,$hashed_password,$userfirstname,$userlastname);
                 if(mysqli_stmt_fetch($stmt)){
                   if(password_verify($password, $hashed_password)){
                      session_start();
                      $_SESSION["username"]  = $username;
                      $_SESSION["firstname"] = $userfirstname;
                      $_SESSION["lastname"]  = $userlastname;
+                     $_SESSION["userid"]    = $userid;
                      header("location: spendsum.php");
                   }
                   else{ $password_err = "The password was not valid."; }
